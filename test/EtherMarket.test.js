@@ -42,4 +42,30 @@ describe("EtherMarket", () => {
     const balance2 = await contract.getBalance();
     expect(balance2).to.be.eq(ethers.utils.parseEther("2"));
   });
+
+  it.only("a user should be able to receive ether once per day", async () => {
+    const balance = await contract.getBalance();
+    expect(balance).to.be.eq(0);
+
+    const donateEtherTx = await contract.donateEther({
+      value: ethers.utils.parseEther("3"),
+    });
+    await donateEtherTx.wait();
+
+    const setReceivableEtherAmountTx = await contract.setReceivableEtherAmount(
+      1000
+    );
+
+    await setReceivableEtherAmountTx.wait();
+
+    const balance2 = await contract.getBalance();
+    expect(balance2).to.be.eq(ethers.utils.parseEther("3"));
+
+    const receiveEtherTx = await contract.receiveEther();
+    await receiveEtherTx.wait();
+
+    await expect(contract.receiveEther()).to.be.revertedWith(
+      "Due to limited resources, REQUESTS to Goerli network are limited to ONCE A DAY."
+    );
+  });
 });

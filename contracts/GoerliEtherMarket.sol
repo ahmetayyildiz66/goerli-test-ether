@@ -40,7 +40,6 @@ contract GoerliEtherMarket {
     uint256 amount = 1 ether / _receivableEtherAmount;
 
     if (_payments[msg.sender].receiver == address(0)) {
-      console.log("address is equal to 0");
       Payment memory payment = Payment({
         receiver: msg.sender,
         date: block.timestamp,
@@ -51,10 +50,7 @@ contract GoerliEtherMarket {
       payable(msg.sender).transfer(amount);
     } else {
       Payment storage payment = _payments[msg.sender];
-      console.log('receive ether else: ');
-      console.log("Tranfser bool %s", payment.receiver);
       bool isLessThanOneDay = (block.timestamp - payment.date) < 1 days;
-      console.log("Tranfser bool %s", isLessThanOneDay);
       require(!isLessThanOneDay, "Due to limited resources, REQUESTS to Goerli network are limited to ONCE A DAY.");
 
       payment.date = block.timestamp;
