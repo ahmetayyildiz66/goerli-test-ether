@@ -34,7 +34,7 @@ contract GoerliEtherMarket {
   }
 
   function receiveEther() external {
-    require(_balance > 2 ether, "To receive ether balance must be greater than 2 ether");
+    require(_balance > 0.5 ether, "To receive ether balance must be greater than 1 ether");
     require(_receivableEtherAmount != 0, "Receiable amount must be set");
 
     uint256 amount = 1 ether / _receivableEtherAmount;
