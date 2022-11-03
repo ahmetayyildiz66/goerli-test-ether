@@ -10,7 +10,7 @@ interface HallOfFameProps {
   score: number;
 }
 
-export default function Example() {
+export default function AccordionContent() {
   const [open, setOpen] = useState(1);
   const [hallOfFameList, setHallOfFameList] = useState<HallOfFameProps[]>([
     {
