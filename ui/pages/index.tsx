@@ -114,7 +114,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     getBalance()
     getReceivableAmount()
-  }, [isConnected])
+  }, [isConnected, account])
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center py-2 mt-10">
