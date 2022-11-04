@@ -43,7 +43,7 @@ describe("EtherMarket", () => {
     expect(balance2).to.be.eq(ethers.utils.parseEther("2"));
   });
 
-  it.only("a user should be able to receive ether once per day", async () => {
+  it("a user should be able to receive ether once per day", async () => {
     const balance = await contract.getBalance();
     expect(balance).to.be.eq(0);
 

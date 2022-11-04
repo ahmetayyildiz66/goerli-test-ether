@@ -7,6 +7,7 @@ contract GoerliEtherMarket {
   address private _owner;
   uint256 private _receivableEtherAmount;
   uint256 private _balance;
+  uint256 private _minimumBalanceToWithdraw;
 
   struct Payment {
     address receiver;
@@ -34,7 +35,7 @@ contract GoerliEtherMarket {
   }
 
   function receiveEther() external {
-    require(_balance > 0.5 ether, "To receive ether balance must be greater than 1 ether");
+    require(_balance > _minimumBalanceToWithdraw *  1 ether, "To receive ether balance must be greater than minimum balance to withdraw");
     require(_receivableEtherAmount != 0, "Receiable amount must be set");
 
     uint256 amount = 1 ether / _receivableEtherAmount;
@@ -84,6 +85,10 @@ contract GoerliEtherMarket {
 
   function getDonate() external view returns(Donate memory) {
     return _donates[msg.sender];
+  }
+
+  function setMinimumBalanceToWithdraw(uint256 minEthBalance_) onlyOwner external {
+    _minimumBalanceToWithdraw = minEthBalance_;
   }
 
   function getBalance() external view returns(uint256) {

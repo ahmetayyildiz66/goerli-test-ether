@@ -18,7 +18,7 @@ const Home: NextPage = () => {
   const [account, setAccount] = useState('')
   const [error, setError] = useState('')
   const [donateAmount, setDonateAmount] = useState('0')
-  const contractAddress = '0xD0be961c63385A9fe2B5AbccfA2C04375420e134'
+  const contractAddress = '0xF63aFf56A07c1e0388Af7F28b51A39873B06cfe3'
   const contractABI = GoerliEtherMarket.abi
   const [contractBalance, setContractBalance] = useState('')
 
@@ -69,6 +69,7 @@ const Home: NextPage = () => {
 
       const donateTx = await goerliEtherContract.donateEther({ value: ethers.utils.parseEther(donateAmount) })
       await donateTx.wait()
+      getBalance()
 
     } catch (err: any) {
       if (err.message) {
@@ -85,7 +86,8 @@ const Home: NextPage = () => {
       const etherMarketContract = new ethers.Contract(contractAddress, contractABI, signer)
 
       const receiveEtherTx = await etherMarketContract.receiveEther()
-      const resp = await receiveEtherTx.wait()
+      await receiveEtherTx.wait()
+      getBalance()
 
     } catch (err: any) {
       if (err.message) {
