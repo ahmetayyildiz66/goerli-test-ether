@@ -17,8 +17,9 @@ const Home: NextPage = () => {
   const [isConnected, setIsConnected] = useState(false)
   const [account, setAccount] = useState('')
   const [error, setError] = useState('')
+  const [receivableAmount, setReceivableAmount] = useState('')
   const [donateAmount, setDonateAmount] = useState('0')
-  const contractAddress = '0xF63aFf56A07c1e0388Af7F28b51A39873B06cfe3'
+  const contractAddress = '0x299204B8cDAcC2a3afbCB042884e0F9926C7e9AB'
   const contractABI = GoerliEtherMarket.abi
   const [contractBalance, setContractBalance] = useState('')
 
@@ -38,6 +39,20 @@ const Home: NextPage = () => {
 
       const balance = await goerliEtherContract.getBalance()
       setContractBalance(ethers.utils.formatEther(balance))
+    } catch (err) {
+
+    }
+  }
+
+  const getReceivableAmount = async () => {
+    try {
+      const provider = new ethers.providers.Web3Provider(ethereum() as any)
+      const signer = provider.getSigner()
+
+      const goerliEtherContract = new ethers.Contract(contractAddress, contractABI, signer)
+
+      const receivableAmount = await goerliEtherContract.getReceivableAmount()
+      setReceivableAmount(ethers.utils.formatEther(receivableAmount))
     } catch (err) {
 
     }
@@ -98,6 +113,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     getBalance()
+    getReceivableAmount()
   }, [isConnected])
 
   return (
@@ -105,9 +121,9 @@ const Home: NextPage = () => {
       {
         isConnected ?
           <>
-            <h1 className="text-5xl">Bootstrap your Goerli testnet wallet</h1>
+            <h1 className="text-5xl">Goerli faucet</h1>
             <p className="flex justify-end items-end text-gray-900 text-lg mt-4">Contract balance: {contractBalance} ether</p>
-            <Card title="Request Tokens" btnText={account ? 'Claim' : 'Enter Valid Address'} handleAction={claimEther}>
+            <Card title="Request Tokens" btnText={account ? `Claim (${receivableAmount}) ether` : 'Enter Valid Address'} handleAction={claimEther}>
               <p className="text-md">Enter your Ethereum address to receive tokens:</p>
               <input value={account} onChange={(e) => setAccount(e.target.value)} className="my-3  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-black-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0xf73F9b47ac3c6Fb96Aa76c1731525402dA5378bd" />
             </Card>
@@ -118,7 +134,8 @@ const Home: NextPage = () => {
               <label className="block my-2">Enter an amount(in units of Ether, not Wei)</label>
               <input type="string" value={donateAmount} onChange={(e) => setDonateAmount(e.target.value)} className="my-3  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-black-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0" />
             </Card>
-            <AccordionContent /></>
+            {/* <AccordionContent /> */}
+          </>
           :
           <button className="bg-blue-400 p-4 rounded-md text-gray-50 text-md" onClick={connectMetamask}>Connect to MetaMask</button>
       }
