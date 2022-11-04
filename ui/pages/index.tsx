@@ -60,11 +60,11 @@ const Home: NextPage = () => {
 
   const connectMetamask = async () => {
     checkIfMetamaskExist()
-    setIsConnected(true)
     try {
 
       const accounts = await ethereum()?.request({ method: 'eth_requestAccounts' })
       if (Array.isArray(accounts) && accounts.length) {
+        setIsConnected(true)
         setAccount(accounts[0])
       } else {
         return null
